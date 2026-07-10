@@ -10,8 +10,9 @@ body {
     background: #f0f0f0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
+    overflow-y: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -24,7 +25,7 @@ body {
     background: #ffffff;
     padding: 0 24px;
     position: relative;
-    overflow-y: auto;
+    overflow-y: visible;
 }
 
 @media (min-width: 500px) {
