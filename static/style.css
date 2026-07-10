@@ -389,3 +389,34 @@ body {
 .toast.error .toast-icon {
     background: #f44336;
 }
+
+/* ===== Verification Code (Sign Up) ===== */
+.verify-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.verify-wrapper input {
+    flex: 1;
+    padding-right: 0;
+}
+
+.get-code-btn {
+    background: none;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    cursor: pointer;
+    padding: 0 16px;
+    height: 48px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a7fff;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.get-code-btn:hover {
+    color: #3366dd;
+}

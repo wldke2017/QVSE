@@ -43,6 +43,13 @@ def index():
     return send_from_directory('static', 'index.html')
 
 
+@app.route('/signup')
+def signup():
+    """Serve the sign up page."""
+    return send_from_directory('static', 'signup.html')
+
+
+
 @app.route('/api/login', methods=['POST'])
 def login():
     """Handle login form submission and save details to the Neon database."""
