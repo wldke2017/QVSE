@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // === Splash Screen ===
+    // === Splash Screen (shows on every page load / refresh) ===
     const splashScreen = document.getElementById('splashScreen');
     if (splashScreen) {
-        // Show splash for at least 5 seconds, then fade out
+        // Ensure it is fully visible at start
+        splashScreen.style.opacity = '1';
+        splashScreen.style.visibility = 'visible';
+
+        // Hide after 5 seconds with smooth fade-out
         setTimeout(function () {
+            splashScreen.style.transition = 'opacity 0.8s ease-in-out, visibility 0.8s ease-in-out';
             splashScreen.classList.add('hidden');
-            // Remove from DOM after fade-out transition completes
+
+            // Remove from DOM after fade completes
             splashScreen.addEventListener('transitionend', function () {
                 splashScreen.remove();
             }, { once: true });
