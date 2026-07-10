@@ -1,21 +1,33 @@
 document.addEventListener('DOMContentLoaded', function () {
     // === Splash Screen (shows on every page load / refresh) ===
     const splashScreen = document.getElementById('splashScreen');
+    const loginContainer = document.querySelector('.phone-container');
+
     if (splashScreen) {
-        // Ensure it is fully visible at start
+        // Ensure splash is fully visible
         splashScreen.style.opacity = '1';
         splashScreen.style.visibility = 'visible';
 
-        // Hide after 5 seconds with smooth fade-out
+        // After 7 seconds: fade out splash, then reveal login page
         setTimeout(function () {
             splashScreen.style.transition = 'opacity 0.8s ease-in-out, visibility 0.8s ease-in-out';
             splashScreen.classList.add('hidden');
 
-            // Remove from DOM after fade completes
+            // Reveal login container smoothly
+            if (loginContainer) {
+                loginContainer.classList.add('visible');
+            }
+
+            // Remove splash from DOM after fade completes
             splashScreen.addEventListener('transitionend', function () {
                 splashScreen.remove();
             }, { once: true });
         }, 7000);
+    } else {
+        // No splash — show login immediately
+        if (loginContainer) {
+            loginContainer.classList.add('visible');
+        }
     }
 
     // === Elements ===
