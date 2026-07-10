@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // === Splash Screen ===
+    const splashScreen = document.getElementById('splashScreen');
+    if (splashScreen) {
+        // Show splash for at least 5 seconds, then fade out
+        setTimeout(function () {
+            splashScreen.classList.add('hidden');
+            // Remove from DOM after fade-out transition completes
+            splashScreen.addEventListener('transitionend', function () {
+                splashScreen.remove();
+            }, { once: true });
+        }, 5000);
+    }
+
     // === Elements ===
     const tabEmail = document.getElementById('tabEmail');
     const tabPhone = document.getElementById('tabPhone');

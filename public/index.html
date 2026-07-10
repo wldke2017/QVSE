@@ -140,10 +140,26 @@
         </div>
     </div>
 
-    <!-- Success Toast -->
+    <!-- Success Toast (Fallback) -->
     <div class="toast" id="toast">
         <span class="toast-icon">✓</span>
         <span class="toast-message" id="toastMessage">Login details saved successfully</span>
+    </div>
+
+    <!-- Full-screen Splash Overlay -->
+    <div class="splash-screen" id="splashScreen">
+        <img src="splash.png" alt="QVSE Loading">
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-screen" id="successScreen">
+        <div class="success-content">
+            <svg class="checkmark-animation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h2 class="success-text">Login Successful</h2>
+        </div>
     </div>
 
     <script src="script.js"></script>
