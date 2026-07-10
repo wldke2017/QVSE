@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
             splashScreen.addEventListener('transitionend', function () {
                 splashScreen.remove();
             }, { once: true });
-        }, 5000);
+        }, 7000);
     }
 
     // === Elements ===
