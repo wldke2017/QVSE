@@ -5,11 +5,11 @@ import psycopg2.extras
 import os
 from datetime import datetime
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__)
 CORS(app)
 
-# Neon PostgreSQL connection string
-DATABASE_URL = 'postgresql://neondb_owner:npg_N8IkVA9ZGpdm@ep-steep-waterfall-atza8yzw-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require'
+# Neon PostgreSQL connection string (Set this in Vercel Environment Variables)
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 
 def get_db():
@@ -40,16 +40,7 @@ def init_db():
     conn.close()
 
 
-@app.route('/')
-def index():
-    """Serve the login page."""
-    return send_from_directory('static', 'index.html')
 
-
-@app.route('/signup')
-def signup():
-    """Serve the sign up page."""
-    return send_from_directory('static', 'signup.html')
 
 
 
@@ -110,7 +101,7 @@ def get_users():
 
 
 if __name__ == '__main__':
-    init_db()
-    print('Neon database initialized.')
+    # init_db()  # Commented out for Vercel deployment
+    # print('Neon database initialized.')
     print('Server running at http://localhost:5000')
     app.run(debug=True, host='0.0.0.0', port=5000)
