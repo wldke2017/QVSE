@@ -1,33 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // === Splash Screen (shows on every page load / refresh) ===
+    // === Splash Screen ===
     const splashScreen = document.getElementById('splashScreen');
-    const loginContainer = document.querySelector('.phone-container');
 
     if (splashScreen) {
-        // Ensure splash is fully visible
-        splashScreen.style.opacity = '1';
-        splashScreen.style.visibility = 'visible';
+        // Force splash fully visible via inline style (bypass any CSS cache issues)
+        splashScreen.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;opacity:1;visibility:visible;';
 
-        // After 7 seconds: fade out splash, then reveal login page
+        // After 7 seconds: fade out and remove splash entirely
         setTimeout(function () {
-            splashScreen.style.transition = 'opacity 0.8s ease-in-out, visibility 0.8s ease-in-out';
-            splashScreen.classList.add('hidden');
+            splashScreen.style.transition = 'opacity 0.8s ease-in-out';
+            splashScreen.style.opacity = '0';
 
-            // Reveal login container smoothly
-            if (loginContainer) {
-                loginContainer.classList.add('visible');
-            }
-
-            // Remove splash from DOM after fade completes
-            splashScreen.addEventListener('transitionend', function () {
-                splashScreen.remove();
-            }, { once: true });
+            // Remove from DOM after fade
+            setTimeout(function () {
+                if (splashScreen && splashScreen.parentNode) {
+                    splashScreen.parentNode.removeChild(splashScreen);
+                }
+            }, 900);
         }, 7000);
-    } else {
-        // No splash — show login immediately
-        if (loginContainer) {
-            loginContainer.classList.add('visible');
-        }
     }
 
     // === Elements ===
