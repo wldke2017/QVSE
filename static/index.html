@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Back Arrow -->
+        <div class="back-arrow" id="backArrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </div>
+
+        <!-- Login Title -->
+        <h1 class="login-title">Login</h1>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" id="tabEmail" data-tab="email">
+                Email
+                <div class="tab-indicator"></div>
+            </div>
+            <div class="tab" id="tabPhone" data-tab="phone">
+                Phone Number
+                <div class="tab-indicator"></div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" autocomplete="off">
+            <!-- Email Input -->
+            <div class="input-group" id="emailGroup">
+                <label class="input-label">Email</label>
+                <div class="input-wrapper">
+                    <input type="email" id="emailInput" placeholder="Please enter email" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Phone Number Input (hidden by default) -->
+            <div class="input-group hidden" id="phoneGroup">
+                <label class="input-label">Phone Number</label>
+                <div class="input-wrapper">
+                    <input type="tel" id="phoneInput" placeholder="Please enter phone number" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="input-group">
+                <label class="input-label">Password</label>
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="passwordInput" placeholder="Please enter password" autocomplete="off">
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <!-- Eye closed icon -->
+                        <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                        <!-- Eye open icon -->
+                        <svg class="eye-icon eye-open hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember Password -->
+            <div class="checkbox-row">
+                <label class="custom-checkbox" id="rememberCheck">
+                    <input type="checkbox" id="rememberPassword" checked>
+                    <span class="checkmark">
+                        <svg width="18" height="18" viewBox="0 0 20 20">
+                            <circle cx="10" cy="10" r="10" fill="#333"/>
+                            <polyline points="6 10 9 13 14 7" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="checkbox-label">Remember Password</span>
+                </label>
+            </div>
+
+            <!-- Forgot Password -->
+            <a href="#" class="forgot-password" id="forgotPassword">Forgot Password</a>
+
+            <!-- User Agreement -->
+            <div class="checkbox-row agreement-row">
+                <label class="custom-checkbox" id="agreementCheck">
+                    <input type="checkbox" id="userAgreement" checked>
+                    <span class="checkmark">
+                        <svg width="18" height="18" viewBox="0 0 20 20">
+                            <circle cx="10" cy="10" r="10" fill="#333"/>
+                            <polyline points="6 10 9 13 14 7" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="checkbox-label">I have read and agree <a href="#" class="agreement-link">User Agreement</a></span>
+                </label>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn" id="loginBtn">Login</button>
+        </form>
+
+        <!-- Download App -->
+        <a href="#" class="download-app" id="downloadApp">Download App</a>
+
+        <!-- Sign Up -->
+        <div class="signup-row">
+            <span class="signup-text">No Account?</span>
+            <a href="#" class="signup-link" id="signupLink">Sign Up</a>
+        </div>
+
+        <!-- Bottom Bar (iPhone style) -->
+        <div class="bottom-bar">
+            <div class="bottom-bar-line"></div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage">Login details saved successfully</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

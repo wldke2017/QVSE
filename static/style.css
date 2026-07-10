@@ -1,0 +1,391 @@
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Phone Container ===== */
+.phone-container {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: #ffffff;
+    padding: 0 24px;
+    position: relative;
+    overflow-y: auto;
+}
+
+@media (min-width: 500px) {
+    .phone-container {
+        min-height: 860px;
+        border-radius: 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        margin: 20px 0;
+    }
+}
+
+/* ===== Back Arrow ===== */
+.back-arrow {
+    padding-top: 20px;
+    padding-bottom: 8px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.back-arrow svg {
+    display: block;
+}
+
+/* ===== Login Title ===== */
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+}
+
+/* ===== Tabs ===== */
+.tabs {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    border-bottom: none;
+}
+
+.tab {
+    font-size: 15px;
+    font-weight: 500;
+    color: #aaa;
+    cursor: pointer;
+    padding-bottom: 10px;
+    position: relative;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.tab.active {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: transparent;
+    border-radius: 2px;
+    transition: background 0.2s ease;
+}
+
+.tab.active .tab-indicator {
+    background: #1a1a1a;
+}
+
+/* ===== Input Groups ===== */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group.hidden {
+    display: none;
+}
+
+.input-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+    border-color: #bbb;
+}
+
+.input-wrapper input {
+    width: 100%;
+    height: 48px;
+    border: none;
+    outline: none;
+    padding: 0 16px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #1a1a1a;
+    background: transparent;
+}
+
+.input-wrapper input::placeholder {
+    color: #ccc;
+    font-weight: 300;
+}
+
+/* Password wrapper */
+.password-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    flex: 1;
+    padding-right: 0;
+}
+
+.toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.toggle-password:hover .eye-icon {
+    stroke: #888;
+}
+
+.eye-icon.hidden {
+    display: none;
+}
+
+/* ===== Checkboxes ===== */
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkmark svg circle {
+    transition: fill 0.2s ease;
+}
+
+/* Unchecked state */
+.custom-checkbox input[type="checkbox"]:not(:checked) + .checkmark svg circle {
+    fill: #ddd;
+}
+
+.custom-checkbox input[type="checkbox"]:not(:checked) + .checkmark svg polyline {
+    stroke: #fff;
+}
+
+/* Checked state */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark svg circle {
+    fill: #333;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+/* ===== Forgot Password ===== */
+.forgot-password {
+    display: inline-block;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #1a1a1a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-bottom: 20px;
+    margin-top: 2px;
+}
+
+.forgot-password:hover {
+    color: #555;
+}
+
+/* ===== Agreement Row ===== */
+.agreement-row {
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.agreement-row .checkbox-label {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #888;
+}
+
+.agreement-link {
+    color: #4a7fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.agreement-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Login Button ===== */
+.login-btn {
+    width: 100%;
+    height: 52px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 28px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s ease, transform 0.1s ease;
+    font-family: inherit;
+}
+
+.login-btn:hover {
+    background: #333;
+}
+
+.login-btn:active {
+    transform: scale(0.985);
+    background: #000;
+}
+
+/* ===== Download App ===== */
+.download-app {
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.download-app:hover {
+    color: #555;
+}
+
+/* ===== Sign Up Row ===== */
+.signup-row {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 60px;
+}
+
+.signup-text {
+    font-size: 14px;
+    color: #999;
+}
+
+.signup-link {
+    font-size: 14px;
+    color: #4a7fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Bottom Bar (iPhone Home Indicator) ===== */
+.bottom-bar {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 5px;
+}
+
+.bottom-bar-line {
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    border-radius: 3px;
+}
+
+/* ===== Toast Notification ===== */
+.toast {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #1a1a1a;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    width: 22px;
+    height: 22px;
+    background: #4caf50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.toast.error .toast-icon {
+    background: #f44336;
+}
