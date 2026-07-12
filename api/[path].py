@@ -84,6 +84,41 @@ def login():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
+@app.route('/api/rating', methods=['POST'])
+def save_rating():
+    """Handle rating and feedback submission."""
+    data = request.get_json()
+
+    rating = data.get('rating', 0)
+    feedback = data.get('feedback', '')
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    if not rating or int(rating) < 1 or int(rating) > 5:
+        return jsonify({'success': False, 'message': 'A star rating between 1 and 5 is required'}), 400
+
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS ratings (
+                id SERIAL PRIMARY KEY,
+                rating INTEGER NOT NULL,
+                feedback TEXT,
+                created_at TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            INSERT INTO ratings (rating, feedback, created_at)
+            VALUES (%s, %s, %s)
+        ''', (int(rating), feedback, created_at))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True, 'message': 'Rating saved successfully'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 @app.route('/api/users', methods=['GET'])
 def get_users():
     """Retrieve all saved login entries (for admin/debugging)."""
