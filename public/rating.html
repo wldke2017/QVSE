@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QVSE | Rate Us</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Back Arrow -->
+        <a href="index.html" class="back-arrow" id="backArrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </a>
+
+        <!-- Page Title -->
+        <h1 class="login-title">Rate Us</h1>
+
+        <!-- Subtitle -->
+        <p class="rating-subtitle">How was your experience with QVSE?</p>
+
+        <!-- Stars -->
+        <div class="stars-container">
+            <div class="stars-row" id="starsRow">
+                <!-- Stars rendered by JS -->
+                <span class="star" data-value="1">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                </span>
+                <span class="star" data-value="2">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                </span>
+                <span class="star" data-value="3">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                </span>
+                <span class="star" data-value="4">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                </span>
+                <span class="star" data-value="5">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                    </svg>
+                </span>
+            </div>
+            <p class="rating-label" id="ratingLabel">Tap a star to rate</p>
+        </div>
+
+        <!-- Feedback Form -->
+        <form id="ratingForm" autocomplete="off" novalidate>
+            <!-- Feedback Textarea -->
+            <div class="input-group">
+                <label class="input-label">Feedback <span class="optional-tag">(Optional)</span></label>
+                <div class="textarea-wrapper">
+                    <textarea
+                        id="feedbackInput"
+                        placeholder="Share your thoughts..."
+                        rows="5"
+                        maxlength="500"
+                    ></textarea>
+                    <span class="char-count" id="charCount">0 / 500</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-btn" id="submitBtn">Submit</button>
+        </form>
+
+        <!-- Bottom Bar (iPhone style) -->
+        <div class="bottom-bar">
+            <div class="bottom-bar-line"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage">Thank you for your feedback!</span>
+    </div>
+
+    <!-- Congratulations Overlay -->
+    <div class="congrats-screen" id="congratsScreen">
+        <div class="confetti-container" id="confettiContainer"></div>
+        <div class="congrats-content">
+            <span class="congrats-trophy">🏆</span>
+            <h1 class="congrats-title">Congratulations!</h1>
+            <p class="congrats-subtitle">Thank you for your amazing feedback!<br>Your opinion helps us grow. 🚀</p>
+            <div class="congrats-stars-row">
+                <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="rating.js?v=5"></script>
+</body>
+</html>

