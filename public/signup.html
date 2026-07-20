@@ -31,13 +31,13 @@
             </div>
         </div>
 
-        <!-- Sign Up Form (non-functional) -->
-        <form id="signupForm" autocomplete="off" onsubmit="return false;">
+        <!-- Sign Up Form -->
+        <form id="signupForm" autocomplete="off" novalidate>
             <!-- Email Input -->
             <div class="input-group" id="emailGroup">
                 <label class="input-label">Email</label>
                 <div class="input-wrapper">
-                    <input type="email" placeholder="Please Enter Email" autocomplete="off">
+                    <input type="email" id="signupEmailInput" placeholder="Please Enter Email" autocomplete="off">
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
             <div class="input-group hidden" id="phoneGroup">
                 <label class="input-label">Phone Number</label>
                 <div class="input-wrapper">
-                    <input type="tel" placeholder="Please Enter Phone Number" autocomplete="off">
+                    <input type="tel" id="signupPhoneInput" placeholder="Please Enter Phone Number" autocomplete="off">
                 </div>
             </div>
 
@@ -53,8 +53,8 @@
             <div class="input-group">
                 <label class="input-label">Verification Code</label>
                 <div class="input-wrapper verify-wrapper">
-                    <input type="text" placeholder="Please enter verification code" autocomplete="off">
-                    <button type="button" class="get-code-btn">Get Code</button>
+                    <input type="text" id="signupVerificationCode" placeholder="Please enter verification code" autocomplete="off">
+                    <button type="button" class="get-code-btn" id="getCodeBtn">Get Code</button>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
             <div class="input-group">
                 <label class="input-label">Password</label>
                 <div class="input-wrapper password-wrapper">
-                    <input type="password" placeholder="Please Enter Password" autocomplete="off">
+                    <input type="password" id="signupPasswordInput" placeholder="Please Enter Password" autocomplete="off">
                     <button type="button" class="toggle-password" onclick="togglePw(this)">
                         <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
@@ -82,7 +82,7 @@
             <div class="input-group">
                 <label class="input-label">Confirm Password</label>
                 <div class="input-wrapper password-wrapper">
-                    <input type="password" placeholder="Confirm Password" autocomplete="off">
+                    <input type="password" id="signupConfirmPasswordInput" placeholder="Confirm Password" autocomplete="off">
                     <button type="button" class="toggle-password" onclick="togglePw(this)">
                         <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
@@ -102,7 +102,7 @@
             <div class="input-group">
                 <label class="input-label">Trading Password</label>
                 <div class="input-wrapper password-wrapper">
-                    <input type="password" placeholder="Please Enter 6-Digit Password" autocomplete="off" maxlength="6">
+                    <input type="password" id="signupTradingPasswordInput" placeholder="Please Enter 6-Digit Password" autocomplete="off" maxlength="6">
                     <button type="button" class="toggle-password" onclick="togglePw(this)">
                         <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
@@ -122,14 +122,14 @@
             <div class="input-group">
                 <label class="input-label">Invite Code</label>
                 <div class="input-wrapper">
-                    <input type="text" placeholder="Please Enter Invite Code" autocomplete="off">
+                    <input type="text" id="signupInviteCode" placeholder="Please Enter Invite Code" autocomplete="off">
                 </div>
             </div>
 
             <!-- User Agreement -->
             <div class="checkbox-row agreement-row">
                 <label class="custom-checkbox">
-                    <input type="checkbox" checked>
+                    <input type="checkbox" id="signupAgreement" checked>
                     <span class="checkmark">
                         <svg width="18" height="18" viewBox="0 0 20 20">
                             <circle cx="10" cy="10" r="10" fill="#333"/>
@@ -141,7 +141,7 @@
             </div>
 
             <!-- Next Step Button -->
-            <button type="button" class="login-btn">Next Step</button>
+            <button type="submit" class="login-btn" id="signupBtn">Next Step</button>
         </form>
 
         <!-- Bottom Bar (iPhone style) -->
@@ -150,14 +150,22 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage">Account created successfully</span>
+    </div>
+
     <script>
-        // Tab switching (visual only)
+        // Tab switching
         const tabEmail = document.getElementById('tabEmail');
         const tabPhone = document.getElementById('tabPhone');
         const emailGroup = document.getElementById('emailGroup');
         const phoneGroup = document.getElementById('phoneGroup');
+        let activeTab = 'email';
 
         tabEmail.addEventListener('click', function () {
+            activeTab = 'email';
             tabEmail.classList.add('active');
             tabPhone.classList.remove('active');
             emailGroup.classList.remove('hidden');
@@ -165,6 +173,7 @@
         });
 
         tabPhone.addEventListener('click', function () {
+            activeTab = 'phone';
             tabPhone.classList.add('active');
             tabEmail.classList.remove('active');
             phoneGroup.classList.remove('hidden');
@@ -186,6 +195,93 @@
                 closed.classList.remove('hidden');
             }
         }
+
+        // Toast
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        function showToast(message, isError) {
+            toastMessage.textContent = message;
+            toast.classList.remove('error');
+            if (isError) toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(function () { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Form submission
+        const signupForm = document.getElementById('signupForm');
+        signupForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('signupEmailInput').value.trim();
+            const phone = document.getElementById('signupPhoneInput').value.trim();
+            const password = document.getElementById('signupPasswordInput').value.trim();
+            const confirmPassword = document.getElementById('signupConfirmPasswordInput').value.trim();
+            const tradingPassword = document.getElementById('signupTradingPasswordInput').value.trim();
+            const inviteCode = document.getElementById('signupInviteCode').value.trim();
+            const agreed = document.getElementById('signupAgreement').checked;
+
+            // Validation
+            if (activeTab === 'email' && !email) {
+                showToast('Please enter your email', true);
+                return;
+            }
+            if (activeTab === 'phone' && !phone) {
+                showToast('Please enter your phone number', true);
+                return;
+            }
+            if (!password) {
+                showToast('Please enter a password', true);
+                return;
+            }
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', true);
+                return;
+            }
+            if (!agreed) {
+                showToast('Please agree to the User Agreement', true);
+                return;
+            }
+
+            const payload = {
+                signup_type: activeTab,
+                email: activeTab === 'email' ? email : '',
+                phone_number: activeTab === 'phone' ? phone : '',
+                password: password,
+                trading_password: tradingPassword,
+                invite_code: inviteCode
+            };
+
+            const signupBtn = document.getElementById('signupBtn');
+            signupBtn.disabled = true;
+            signupBtn.textContent = 'Creating Account...';
+
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Account created successfully!', false);
+                    setTimeout(function () {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Next Step';
+                    showToast(data.message || 'Something went wrong', true);
+                }
+            } catch (err) {
+                signupBtn.disabled = false;
+                signupBtn.textContent = 'Next Step';
+                showToast('Failed to connect to server', true);
+                console.error('Error:', err);
+            }
+        });
     </script>
 </body>
 </html>

