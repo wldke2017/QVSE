@@ -748,29 +748,31 @@ body {
 }
 
 /* ===== RXDT Wizard (Congratulations Screen) ===== */
-.congrats-close {
+.congrats-replay {
     position: absolute;
     top: 18px;
     right: 18px;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 24px;
-    line-height: 1;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #FFD700;
     cursor: pointer;
     z-index: 5;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.congrats-close:hover {
-    background: rgba(255, 255, 255, 0.22);
-    color: #fff;
+.congrats-replay:hover {
+    background: rgba(255, 215, 0, 0.3);
+    transform: rotate(-180deg);
+}
+
+.congrats-replay:active {
+    transform: scale(0.9);
 }
 
 .wizard-content {
@@ -1053,17 +1055,44 @@ body {
     transform: scale(0.97);
 }
 
-/* Maybe Later Link */
-.wizard-later {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.55);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
+/* Previous Button */
+.wizard-btn-prev {
+    min-width: 130px;
+    height: 50px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.wizard-later:hover {
-    color: rgba(255, 255, 255, 0.85);
+.wizard-btn-prev:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+}
+
+.wizard-btn-prev:active {
+    transform: scale(0.97);
+}
+
+/* Button Row (Previous + Continue side by side) */
+.wizard-btn-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.wizard-btn-row .wizard-btn {
+    margin-top: 0;
 }
 
 /* Splash Screen Overlay */

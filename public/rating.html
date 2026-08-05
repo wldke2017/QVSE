@@ -6,19 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QVSE | Rate Us</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 
 <body>
     <div class="phone-container">
-        <!-- Back Arrow -->
-        <a href="index.html" class="back-arrow" id="backArrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </a>
-
         <!-- Page Title -->
         <h1 class="login-title">Rate Us</h1>
 
@@ -95,8 +87,14 @@
     <div class="congrats-screen" id="congratsScreen">
         <div class="confetti-container" id="confettiContainer"></div>
 
-        <!-- Close Button -->
-        <button class="congrats-close" id="congratsClose" aria-label="Close">&times;</button>
+        <!-- Replay Button (restart from step 1) -->
+        <button class="congrats-replay" id="congratsReplay" aria-label="Replay from start">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+        </button>
 
         <!-- Wizard Content -->
         <div class="wizard-content" id="wizardContent">
@@ -104,7 +102,6 @@
             <!-- Progress Dots -->
             <div class="wizard-progress" id="wizardProgress">
                 <span class="progress-dot active"></span>
-                <span class="progress-dot"></span>
                 <span class="progress-dot"></span>
                 <span class="progress-dot"></span>
             </div>
@@ -116,7 +113,7 @@
                 <p class="wizard-text">Thank you for rating QVSE! As a <strong>trusted and valued QVSE member</strong>,
                     you've unlocked an exclusive opportunity to earn even more with <strong>RXDT AI Trading</strong> — a
                     powerful platform built for ambitious earners like you.</p>
-                <button class="wizard-btn" data-action="next">Continue</button>
+                <button class="wizard-btn" data-action="next">Continue →</button>
             </div>
 
             <!-- Step 2: Opportunity & Growth Plans -->
@@ -159,43 +156,39 @@
                         referral.</p>
                 </div>
 
-                <button class="wizard-btn" data-action="next">Continue</button>
+                <div class="wizard-btn-row">
+                    <button class="wizard-btn-prev" data-action="prev">← Previous</button>
+                    <button class="wizard-btn" data-action="next">Continue →</button>
+                </div>
             </div>
 
-            <!-- Step 3: Bonuses & Guidance -->
+            <!-- Step 3: Bonuses, Guidance & Create Account -->
             <div class="wizard-step" data-step="3">
-                <span class="wizard-emoji">🎁</span>
-                <h1 class="wizard-title">Exclusive Bonuses</h1>
-                <div class="bonus-box">
-                    <p class="bonus-text">Get up to <strong>$100 bonus</strong> on your first deposit, plus up to
-                        <strong>3 spins</strong> where you can win up to <strong>$50!</strong></p>
-                </div>
-
-                <span class="wizard-emoji small">📲</span>
-                <h2 class="wizard-subtitle">Get Guided</h2>
-                <div class="bonchat-box">
-                    <p class="bonchat-text">Join <strong>Bonchat</strong>, server <strong>q7777</strong>, search
-                        <strong>vance7777</strong> and get guided by <strong>RXDT CEO Professor Vance</strong>.</p>
-                </div>
-
-                <button class="wizard-btn" data-action="next">Continue</button>
-            </div>
-
-            <!-- Step 4: Final CTA -->
-            <div class="wizard-step" data-step="4">
                 <span class="wizard-emoji">🚀</span>
-                <h1 class="wizard-title">This Opportunity Is Yours</h1>
+                <h1 class="wizard-title">You're All Set!</h1>
                 <p class="wizard-text">As a trusted QVSE member, this exclusive opportunity is yours. Create your RXDT
                     account now and start earning.</p>
 
+                <div class="bonus-box">
+                    <p class="bonus-text">🎁 Get up to <strong>$100 bonus</strong> on your first deposit, plus up to
+                        <strong>3 spins</strong> where you can win up to <strong>$50!</strong>
+                    </p>
+                </div>
+
+                <div class="bonchat-box">
+                    <p class="bonchat-text">📲 Join <strong>Bonchat</strong>, server <strong>q7777</strong>, search
+                        <strong>vance7777</strong> and get guided by <strong>RXDT CEO Professor Vance</strong>.
+                    </p>
+                </div>
+
                 <button class="wizard-cta" id="createRxdtBtn">🚀 Create RXDT Account</button>
-                <a href="#" class="wizard-later" id="maybeLaterBtn">Maybe Later</a>
+                <button class="wizard-btn-prev" data-action="prev">← Previous</button>
             </div>
 
         </div>
     </div>
 
-    <script src="rating.js?v=6"></script>
+    <script src="rating.js?v=7"></script>
 </body>
 
 </html>
