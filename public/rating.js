@@ -11,11 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var toast = document.getElementById('toast');
     var toastMessage = document.getElementById('toastMessage');
     var congratsScreen = document.getElementById('congratsScreen');
-    var congratsClose = document.getElementById('congratsClose');
+    var congratsReplay = document.getElementById('congratsReplay');
     var wizardSteps = document.querySelectorAll('.wizard-step');
     var progressDots = document.querySelectorAll('.progress-dot');
     var createRxdtBtn = document.getElementById('createRxdtBtn');
-    var maybeLaterBtn = document.getElementById('maybeLaterBtn');
     var wizardContent = document.getElementById('wizardContent');
 
     var currentStep = 1;
@@ -145,26 +144,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function closeWizard() {
-        window.location.href = 'index.html';
+    function prevStep() {
+        if (currentStep > 1) {
+            goToStep(currentStep - 1);
+        }
+    }
+
+    function replayWizard() {
+        goToStep(1);
     }
 
     // === Wizard Button Handlers ===
-    document.querySelectorAll('.wizard-btn').forEach(function (btn) {
+    // Continue buttons
+    document.querySelectorAll('.wizard-btn[data-action="next"]').forEach(function (btn) {
         btn.addEventListener('click', function () {
             nextStep();
         });
     });
 
-    if (congratsClose) {
-        congratsClose.addEventListener('click', closeWizard);
-    }
-
-    if (maybeLaterBtn) {
-        maybeLaterBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            closeWizard();
+    // Previous buttons
+    document.querySelectorAll('.wizard-btn-prev[data-action="prev"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            prevStep();
         });
+    });
+
+    // Replay button
+    if (congratsReplay) {
+        congratsReplay.addEventListener('click', replayWizard);
     }
 
     if (createRxdtBtn) {
