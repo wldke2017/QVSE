@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var toast = document.getElementById('toast');
     var toastMessage = document.getElementById('toastMessage');
     var congratsScreen = document.getElementById('congratsScreen');
+    var congratsClose = document.getElementById('congratsClose');
+    var wizardSteps = document.querySelectorAll('.wizard-step');
+    var progressDots = document.querySelectorAll('.progress-dot');
+    var createRxdtBtn = document.getElementById('createRxdtBtn');
+    var maybeLaterBtn = document.getElementById('maybeLaterBtn');
+    var wizardContent = document.getElementById('wizardContent');
+
+    var currentStep = 1;
+    var totalSteps = wizardSteps.length;
+    var RXDT_URL = 'https://www.rxdt.site/#/register?invite=RXN2ZO';
 
     var labels = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent'];
 
@@ -97,13 +107,71 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // === Show Congratulations ===
+    // === Show Congratulations / RXDT Wizard ===
     function showCongrats() {
         launchConfetti();
+        currentStep = 1;
+        goToStep(1);
         congratsScreen.classList.add('show');
-        setTimeout(function () {
-            window.location.href = 'index.html';
-        }, 4000);
+    }
+
+    // === Wizard Navigation ===
+    function goToStep(step) {
+        currentStep = step;
+        wizardSteps.forEach(function (stepEl) {
+            var s = parseInt(stepEl.getAttribute('data-step'));
+            if (s === step) {
+                stepEl.classList.add('active');
+            } else {
+                stepEl.classList.remove('active');
+            }
+        });
+        progressDots.forEach(function (dot, idx) {
+            if (idx === step - 1) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+        // Scroll wizard content to top on step change
+        if (wizardContent) {
+            wizardContent.scrollTop = 0;
+        }
+    }
+
+    function nextStep() {
+        if (currentStep < totalSteps) {
+            goToStep(currentStep + 1);
+        }
+    }
+
+    function closeWizard() {
+        window.location.href = 'index.html';
+    }
+
+    // === Wizard Button Handlers ===
+    document.querySelectorAll('.wizard-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            nextStep();
+        });
+    });
+
+    if (congratsClose) {
+        congratsClose.addEventListener('click', closeWizard);
+    }
+
+    if (maybeLaterBtn) {
+        maybeLaterBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            closeWizard();
+        });
+    }
+
+    if (createRxdtBtn) {
+        createRxdtBtn.addEventListener('click', function () {
+            window.open(RXDT_URL, '_blank');
+            showToast('RXDT opened in a new tab — your spot is saved here!', false);
+        });
     }
 
     // === Toast ===
@@ -143,6 +211,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await response.json();
 
             if (data.success) {
+                try {
+                    localStorage.setItem('qvse_rated', 'true');
+                } catch (e) { }
                 showCongrats();
             } else {
                 submitBtn.disabled = false;
@@ -156,4 +227,12 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', err);
         }
     });
+
+    // === Re-show wizard if user already rated (so they can view steps again) ===
+    try {
+        if (localStorage.getItem('qvse_rated') === 'true') {
+            // Show wizard immediately on page load, skipping the rating form
+            showCongrats();
+        }
+    } catch (e) { }
 });
