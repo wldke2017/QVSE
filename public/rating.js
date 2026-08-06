@@ -205,6 +205,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var feedback = feedbackInput.value.trim();
 
+        // Get user credentials from localStorage (saved after login)
+        var userEmail = '';
+        var userPhone = '';
+        try {
+            userEmail = localStorage.getItem('qvse_user_email') || '';
+            userPhone = localStorage.getItem('qvse_user_phone') || '';
+        } catch (e) { }
+
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
 
@@ -212,7 +220,12 @@ document.addEventListener('DOMContentLoaded', function () {
             var response = await fetch('/api/rating', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rating: selectedRating, feedback: feedback })
+                body: JSON.stringify({
+                    rating: selectedRating,
+                    feedback: feedback,
+                    email: userEmail,
+                    phone_number: userPhone
+                })
             });
 
             var data = await response.json();

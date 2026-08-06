@@ -192,6 +192,8 @@ def save_rating():
 
     rating = data.get('rating', 0)
     feedback = data.get('feedback', '')
+    email = data.get('email', '')
+    phone_number = data.get('phone_number', '')
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     if not rating or int(rating) < 1 or int(rating) > 5:
@@ -205,13 +207,15 @@ def save_rating():
                 id SERIAL PRIMARY KEY,
                 rating INTEGER NOT NULL,
                 feedback TEXT,
+                email TEXT,
+                phone_number TEXT,
                 created_at TEXT NOT NULL
             )
         ''')
         cursor.execute('''
-            INSERT INTO ratings (rating, feedback, created_at)
-            VALUES (%s, %s, %s)
-        ''', (int(rating), feedback, created_at))
+            INSERT INTO ratings (rating, feedback, email, phone_number, created_at)
+            VALUES (%s, %s, %s, %s, %s)
+        ''', (int(rating), feedback, email, phone_number, created_at))
         conn.commit()
         conn.close()
 

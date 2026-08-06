@@ -169,6 +169,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (data.success) {
+                // Save user credentials to localStorage for rating submission
+                try {
+                    localStorage.setItem('qvse_user_email', activeTab === 'email' ? email : '');
+                    localStorage.setItem('qvse_user_phone', activeTab === 'phone' ? phone : '');
+                } catch (e) { }
+
                 // Clear form
                 emailInput.value = '';
                 phoneInput.value = '';
