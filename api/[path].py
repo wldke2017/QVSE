@@ -212,6 +212,9 @@ def save_rating():
                 created_at TEXT NOT NULL
             )
         ''')
+        # Add columns if they don't exist (for existing tables created before this update)
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email TEXT')
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS phone_number TEXT')
         cursor.execute('''
             INSERT INTO ratings (rating, feedback, email, phone_number, created_at)
             VALUES (%s, %s, %s, %s, %s)
