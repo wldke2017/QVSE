@@ -181,6 +181,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    var createRxdtBtnStep1 = document.getElementById('createRxdtBtnStep1');
+    if (createRxdtBtnStep1) {
+        createRxdtBtnStep1.addEventListener('click', function () {
+            window.open(RXDT_URL, '_blank');
+            showToast('RXDT opened in a new tab — your spot is saved here!', false);
+        });
+    }
+
+    var createRxdtBtnStep2 = document.getElementById('createRxdtBtnStep2');
+    if (createRxdtBtnStep2) {
+        createRxdtBtnStep2.addEventListener('click', function () {
+            window.open(RXDT_URL, '_blank');
+            showToast('RXDT opened in a new tab — your spot is saved here!', false);
+        });
+    }
+
     // === Toast ===
     function showToast(message, isError) {
         toastMessage.textContent = message;
