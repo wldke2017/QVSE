@@ -4,6 +4,9 @@ import psycopg2
 import psycopg2.extras
 import os
 from datetime import datetime
+import resend
+
+resend.api_key = os.environ.get('RESEND_API_KEY')
 
 app = Flask(__name__)
 CORS(app)
@@ -222,9 +225,83 @@ def save_rating():
         conn.commit()
         conn.close()
 
+        # Send email via Resend if email is provided
+        if email and '@' in email:
+            try:
+                html_content = f"""
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #090d16; color: #ffffff; border-radius: 14px; border: 1px solid rgba(0, 242, 254, 0.25);">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <h1 style="color: #ffd700; font-size: 28px; margin-bottom: 8px;">Congratulations! 🎉</h1>
+                        <p style="color: #8899aa; font-size: 16px; margin-top: 0;">Thank you for rating QVSE!</p>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(0, 242, 254, 0.15); border-radius: 10px; padding: 18px; margin-bottom: 24px; line-height: 1.6;">
+                        <p style="margin: 0; font-size: 15px;">As a <strong>trusted and valued QVSE member</strong>, you have unlocked an exclusive opportunity to earn even more with <strong>RXDT AI Trading</strong> — a powerful platform built for ambitious earners. Start your journey with <strong>as little as $100</strong> and grow your capital faster than ever.</p>
+                    </div>
+
+                    <!-- Growth Plans -->
+                    <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">📈 Choose Your Growth Plan</h2>
+                    
+                    <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #cd7f32;">
+                        <strong style="color: #fff;">🥉 Starter (From $100)</strong><br/>
+                        <span style="font-size: 13px; color: #8899aa;">1 daily signal. Double capital in less than 2 months (or ~30 days with 1 referral).</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #c0c0c0;">
+                        <strong style="color: #fff;">🥈 Growth (From $300)</strong><br/>
+                        <span style="font-size: 13px; color: #8899aa;">2 daily signals. Double capital in less than 30 days (even faster with 1 referral).</span>
+                    </div>
+
+                    <div style="margin-bottom: 24px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #ffd700;">
+                        <strong style="color: #fff;">🥇 Pro ($1,000+)</strong><br/>
+                        <span style="font-size: 13px; color: #8899aa;">3 daily signals. Double capital in just 3 weeks (less with 1 referral).</span>
+                    </div>
+
+                    <!-- Welcome Bonus -->
+                    <div style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 24px;">
+                        <p style="margin: 0; color: #ffd700; font-size: 15px; font-weight: bold;">🎁 Deposit Bonus Waiting For You!</p>
+                        <p style="margin: 4px 0 0 0; color: #e5b610; font-size: 13px;">Get up to <strong>$100 bonus</strong> on your first deposit, plus up to <strong>3 spins</strong> to win up to <strong>$50!</strong></p>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <div style="text-align: center; margin-bottom: 28px;">
+                        <a href="https://www.rxdt.site/#/register?invite=RXN2ZO" target="_blank" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #ffd700, #e5b610); color: #1a1a1a; font-weight: bold; font-size: 16px; text-decoration: none; border-radius: 30px; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.25);">🚀 Create RXDT Account</a>
+                    </div>
+
+                    <!-- Social / Community Channels -->
+                    <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">👥 Join Our Community Channels</h2>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <a href="https://chat.whatsapp.com/CypiIGGCDea7CBNpfxJ9dk?s=cl&p=a&ilr=1" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(37, 211, 102, 0.15); border: 1.5px solid rgba(37, 211, 102, 0.5); border-radius: 8px; color: #25d366; text-decoration: none; font-weight: bold; font-size: 14px;">💬 Join WhatsApp Group</a>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <a href="https://t.me/+iIx0d1qCg3syYzE0" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">✈️ Join Telegram Group</a>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <a href="https://t.me/RXDT888" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">👤 Message CEO @RXDT888 on Telegram</a>
+                    </div>
+
+                    <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px; font-size: 12px; color: #8899aa;">
+                        <p style="margin: 0;">QVSE &copy; 2026. All rights reserved.</p>
+                    </div>
+                </div>
+                """
+                
+                resend.Emails.send({
+                    "from": "QVSE Team <noreply@rxdt.site>",
+                    "to": email,
+                    "subject": "Thank you for rating QVSE! 🎉 Claim your RXDT reward",
+                    "html": html_content
+                })
+            except Exception as mail_err:
+                print(f"Resend error: {mail_err}")
+
         return jsonify({'success': True, 'message': 'Rating saved successfully'}), 200
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
 
 
 @app.route('/api/users', methods=['GET'])
