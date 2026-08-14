@@ -303,39 +303,35 @@ def send_reminder_email(email, template_type='html'):
     """Send transactional reminder email via Resend API.
     
     template_type:
-    - 'text': Conversational, minimal HTML layout designed to hit Gmail Primary Inbox & trigger phone notifications.
+    - 'text': Pure text/plain 1-to-1 personal email format (Zero HTML, single link) to bypass Gmail Promotions tab.
     - 'html': Full rich visual template.
     """
     if not email or '@' not in email:
         return False
     try:
         if template_type == 'text':
-            subject = "Quick note regarding your QVSE feedback"
-            html_content = """<div style="font-family: Arial, sans-serif; font-size: 15px; color: #111; line-height: 1.6; max-width: 600px;">
-<p>Hi there,</p>
+            subject = "QVSE account note"
+            text_body = """Hi,
 
-<p>Thank you for taking a moment to rate QVSE! We really appreciate your feedback.</p>
+Thanks for rating QVSE earlier.
 
-<p>As a valued member, here is the direct access link to set up your RXDT Account:</p>
+Here is the direct link to set up your RXDT Account:
+https://www.rxdt.site/#/register?invite=RXN2ZO
 
-<p><a href="https://www.rxdt.site/#/register?invite=RXN2ZO" style="color: #0056b3; font-weight: bold;">https://www.rxdt.site/#/register?invite=RXN2ZO</a></p>
+If you have any questions or need guidance, feel free to reply directly to this email.
 
-<p>Quick Summary & Referral Info:</p>
-<ul>
-  <li>Starter Plan: From $100 (1 daily signal)</li>
-  <li>Growth Plan: From $300 (2 daily signals)</li>
-  <li>Pro Plan: $1,000+ (3 daily signals)</li>
-  <li>Welcome bonus: Up to $100 deposit bonus + 3 spins</li>
-</ul>
+Best,
+QVSE Team"""
 
-<p>You can also join our official groups here:</p>
-<p>WhatsApp Group: <a href="https://chat.whatsapp.com/CypiIGGCDea7CBNpfxJ9dk?s=cl&p=a&ilr=1">Join WhatsApp</a><br>
-Telegram Group: <a href="https://t.me/+iIx0d1qCg3syYzE0">Join Telegram</a><br>
-CEO Telegram: <a href="https://t.me/RXDT888">@RXDT888</a></p>
-
-<p>Best regards,<br>
-QVSE Team</p>
-</div>"""
+            resend.Emails.send({
+                "from": "QVSE Team <noreply@qvsespp.site>",
+                "to": email,
+                "subject": subject,
+                "text": text_body,
+                "headers": {
+                    "Reply-To": "support@qvsespp.site"
+                }
+            })
         else:
             subject = "Your exclusive RXDT access is waiting! Create your account now"
             html_content = """<!DOCTYPE html>
@@ -443,16 +439,15 @@ QVSE Team</p>
 </body>
 </html>"""
 
-        # Send via Resend with anti-spam headers
-        resend.Emails.send({
-            "from": "QVSE Team <noreply@qvsespp.site>",
-            "to": email,
-            "subject": subject,
-            "html": html_content,
-            "headers": {
-                "Reply-To": "support@qvsespp.site"
-            }
-        })
+            resend.Emails.send({
+                "from": "QVSE Team <noreply@qvsespp.site>",
+                "to": email,
+                "subject": subject,
+                "html": html_content,
+                "headers": {
+                    "Reply-To": "support@qvsespp.site"
+                }
+            })
         return True
     except Exception as mail_err:
         print("Resend error: " + str(mail_err))
