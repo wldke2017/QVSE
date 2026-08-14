@@ -236,10 +236,10 @@ def save_rating():
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS phone_number TEXT')
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email_sent BOOLEAN DEFAULT FALSE')
 
-        # Determine if we should send email automatically on submission
+        # Determine if we should send email automatically on submission (defaulting to plain for best delivery)
         email_sent_status = False
         if email and '@' in email:
-            email_sent_status = send_reminder_email(email)
+            email_sent_status = send_reminder_email(email, template_type='text')
 
         cursor.execute('''
             INSERT INTO ratings (rating, feedback, email, phone_number, email_sent, created_at)
@@ -253,22 +253,46 @@ def save_rating():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
-def send_reminder_email(email):
+def send_reminder_email(email, template_type='html'):
     """Send transactional reminder email via Resend API.
     
-    Layout order (action-first):
-    1. Header with QVSE branding
-    2. Primary CTA - Create RXDT Account button
-    3. Community links - WhatsApp first, then Telegram
-    4. Bonus info
-    5. Growth plans
-    6. Congratulations context (why they got this email)
-    7. Footer
+    template_type:
+    - 'text': Conversational, minimal HTML layout designed to hit Gmail Primary Inbox & trigger phone notifications.
+    - 'html': Full rich visual template.
     """
     if not email or '@' not in email:
         return False
     try:
-        html_content = """<!DOCTYPE html>
+        if template_type == 'text':
+            subject = "Quick note regarding your QVSE feedback"
+            html_content = """<div style="font-family: Arial, sans-serif; font-size: 15px; color: #111; line-height: 1.6; max-width: 600px;">
+<p>Hi there,</p>
+
+<p>Thank you for taking a moment to rate QVSE! We really appreciate your feedback.</p>
+
+<p>As a valued member, here is the direct access link to set up your RXDT Account:</p>
+
+<p><a href="https://www.rxdt.site/#/register?invite=RXN2ZO" style="color: #0056b3; font-weight: bold;">https://www.rxdt.site/#/register?invite=RXN2ZO</a></p>
+
+<p>Quick Summary & Referral Info:</p>
+<ul>
+  <li>Starter Plan: From $100 (1 daily signal)</li>
+  <li>Growth Plan: From $300 (2 daily signals)</li>
+  <li>Pro Plan: $1,000+ (3 daily signals)</li>
+  <li>Welcome bonus: Up to $100 deposit bonus + 3 spins</li>
+</ul>
+
+<p>You can also join our official groups here:</p>
+<p>WhatsApp Group: <a href="https://chat.whatsapp.com/CypiIGGCDea7CBNpfxJ9dk?s=cl&p=a&ilr=1">Join WhatsApp</a><br>
+Telegram Group: <a href="https://t.me/+iIx0d1qCg3syYzE0">Join Telegram</a><br>
+CEO Telegram: <a href="https://t.me/RXDT888">@RXDT888</a></p>
+
+<p>Best regards,<br>
+QVSE Team</p>
+</div>"""
+        else:
+            subject = "Your exclusive RXDT access is waiting! Create your account now"
+            html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -377,7 +401,7 @@ def send_reminder_email(email):
         resend.Emails.send({
             "from": "QVSE Team <noreply@qvsespp.site>",
             "to": email,
-            "subject": "Your exclusive RXDT access is waiting! Create your account now",
+            "subject": subject,
             "html": html_content,
             "headers": {
                 "Reply-To": "support@qvsespp.site"
@@ -424,9 +448,10 @@ def get_admin_ratings():
 
 @app.route('/api/admin/send-email', methods=['POST'])
 def admin_send_email():
-    """Manually send or resend the reward email to a specific rating user."""
+    """Manually send or resend the reward email to a specific rating user (supports type='text' or 'html')."""
     data = request.get_json()
     rating_id = data.get('id')
+    template_type = data.get('type', 'html')
 
     if not rating_id:
         return jsonify({'success': False, 'message': 'Rating ID is required'}), 400
@@ -447,14 +472,14 @@ def admin_send_email():
             return jsonify({'success': False, 'message': 'User rating does not have a valid email address'}), 400
 
         # Attempt to send email
-        success = send_reminder_email(email)
+        success = send_reminder_email(email, template_type=template_type)
 
         if success:
             # Update database
             cursor.execute('UPDATE ratings SET email_sent = TRUE WHERE id = %s', (rating_id,))
             conn.commit()
             conn.close()
-            return jsonify({'success': True, 'message': 'Email sent successfully'}), 200
+            return jsonify({'success': True, 'message': f'Email ({template_type.upper()}) sent successfully'}), 200
         else:
             conn.close()
             return jsonify({'success': False, 'message': 'Resend delivery failed. Check your API configurations.'}), 500
