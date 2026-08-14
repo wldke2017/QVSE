@@ -37,6 +37,50 @@ def get_db():
     return conn
 
 
+def get_setting(key, default_value='true'):
+    """Fetch setting value from settings table."""
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+        cursor.execute('SELECT value FROM settings WHERE key = %s', (key,))
+        row = cursor.fetchone()
+        conn.close()
+        return row[0] if row else default_value
+    except Exception:
+        return default_value
+
+
+def set_setting(key, value):
+    """Set or update setting value in settings table."""
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            INSERT INTO settings (key, value)
+            VALUES (%s, %s)
+            ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
+        ''', (key, str(value)))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print("Error saving setting:", e)
+        return False
+
+
 def init_db():
     """Initialize the Neon database and create the users and signup_users tables."""
     conn = get_db()
@@ -231,14 +275,16 @@ def save_rating():
                 created_at TEXT NOT NULL
             )
         ''')
-        # Add columns if they don't exist (for existing tables created before this update)
+        # Add columns if they don't exist
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email TEXT')
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS phone_number TEXT')
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email_sent BOOLEAN DEFAULT FALSE')
 
-        # Determine if we should send email automatically on submission (defaulting to plain for best delivery)
+        # Check if auto_send is enabled globally
+        auto_send_enabled = get_setting('auto_send', 'true').lower() == 'true'
+
         email_sent_status = False
-        if email and '@' in email:
+        if auto_send_enabled and email and '@' in email:
             email_sent_status = send_reminder_email(email, template_type='text')
 
         cursor.execute('''
@@ -411,6 +457,23 @@ QVSE Team</p>
     except Exception as mail_err:
         print("Resend error: " + str(mail_err))
         return False
+
+
+@app.route('/api/admin/settings', methods=['GET', 'POST'])
+def admin_settings():
+    """Get or update global admin settings (like auto_send)."""
+    if request.method == 'GET':
+        auto_send_val = get_setting('auto_send', 'true').lower() == 'true'
+        return jsonify({'success': True, 'auto_send': auto_send_val}), 200
+
+    if request.method == 'POST':
+        data = request.get_json() or {}
+        auto_send = data.get('auto_send', True)
+        success = set_setting('auto_send', 'true' if auto_send else 'false')
+        if success:
+            return jsonify({'success': True, 'auto_send': bool(auto_send)}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Failed to save setting'}), 500
 
 
 @app.route('/api/admin/ratings', methods=['GET'])

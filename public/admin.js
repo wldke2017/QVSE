@@ -4,6 +4,8 @@
     var toastIcon = document.getElementById('toastIcon');
     var tbody = document.getElementById('ratingsTableBody');
     var refreshBtn = document.getElementById('refreshBtn');
+    var autoSendToggle = document.getElementById('autoSendToggle');
+    var toggleStatusText = document.getElementById('toggleStatusText');
 
     // ── Toast ────────────────────────────────────────────
     function showToast(message, isError) {
@@ -14,6 +16,50 @@
         toastEl.classList.add('show');
         setTimeout(function () { toastEl.classList.remove('show'); }, 3500);
     }
+
+    // ── Load & Handle Settings ───────────────────────────
+    function loadSettings() {
+        fetch('/api/admin/settings')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    autoSendToggle.checked = data.auto_send;
+                    updateToggleUI(data.auto_send);
+                }
+            })
+            .catch(function () { });
+    }
+
+    function updateToggleUI(isOn) {
+        toggleStatusText.textContent = isOn ? 'ON' : 'OFF';
+        toggleStatusText.className = 'toggle-status-text ' + (isOn ? 'on' : 'off');
+    }
+
+    autoSendToggle.addEventListener('change', function () {
+        var isChecked = autoSendToggle.checked;
+        updateToggleUI(isChecked);
+
+        fetch('/api/admin/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ auto_send: isChecked })
+        })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    showToast('✅ Auto-Send emails turned ' + (isChecked ? 'ON' : 'OFF'), false);
+                } else {
+                    showToast('❌ Failed to update auto-send setting', true);
+                    autoSendToggle.checked = !isChecked;
+                    updateToggleUI(!isChecked);
+                }
+            })
+            .catch(function (err) {
+                showToast('❌ Error: ' + err.message, true);
+                autoSendToggle.checked = !isChecked;
+                updateToggleUI(!isChecked);
+            });
+    });
 
     // ── Render star emoji ────────────────────────────────
     function renderStars(n) {
@@ -148,6 +194,7 @@
     refreshBtn.addEventListener('click', function () {
         refreshBtn.textContent = '⏳ Refreshing...';
         refreshBtn.disabled = true;
+        loadSettings();
         loadRatings();
         setTimeout(function () {
             refreshBtn.innerHTML = '<span>🔄</span> Refresh';
@@ -156,5 +203,6 @@
     });
 
     // ── Initialize ───────────────────────────────────────
+    loadSettings();
     loadRatings();
 })();
