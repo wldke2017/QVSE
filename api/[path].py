@@ -305,7 +305,7 @@ def save_rating():
                 """
                 
                 resend.Emails.send({
-                    "from": "QVSE Team <noreply@rxdt.site>",
+                    "from": "QVSE Team <noreply@qvsespp.site>",
                     "to": email,
                     "subject": "Thank you for rating QVSE! 🎉 Claim your RXDT reward",
                     "html": html_content
