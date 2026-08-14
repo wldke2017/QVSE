@@ -6,7 +6,22 @@ import os
 from datetime import datetime
 import resend
 
+# Simple local helper to load .env file if it exists
+def load_env():
+    env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+    if os.path.exists(env_path):
+        with open(env_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, val = line.split('=', 1)
+                    os.environ[key.strip()] = val.strip()
+
+load_env()
 resend.api_key = os.environ.get('RESEND_API_KEY')
+
+if not resend.api_key:
+    print("⚠️ WARNING: RESEND_API_KEY environment variable is not set. Rating reminder emails will not be sent.")
 
 app = Flask(__name__)
 CORS(app)
