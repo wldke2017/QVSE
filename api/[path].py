@@ -233,89 +233,182 @@ def save_rating():
         # Add columns if they don't exist (for existing tables created before this update)
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email TEXT')
         cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS phone_number TEXT')
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email_sent BOOLEAN DEFAULT FALSE')
+        
+        # Determine if we should send email automatically on submission
+        email_sent_status = False
+        if email and '@' in email:
+            email_sent_status = send_reminder_email(email)
+
         cursor.execute('''
-            INSERT INTO ratings (rating, feedback, email, phone_number, created_at)
-            VALUES (%s, %s, %s, %s, %s)
-        ''', (int(rating), feedback, email, phone_number, created_at))
+            INSERT INTO ratings (rating, feedback, email, phone_number, email_sent, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (int(rating), feedback, email, phone_number, email_sent_status, created_at))
         conn.commit()
         conn.close()
 
-        # Send email via Resend if email is provided
-        if email and '@' in email:
-            try:
-                html_content = f"""
-                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #090d16; color: #ffffff; border-radius: 14px; border: 1px solid rgba(0, 242, 254, 0.25);">
-                    <div style="text-align: center; margin-bottom: 24px;">
-                        <h1 style="color: #ffd700; font-size: 28px; margin-bottom: 8px;">Congratulations! 🎉</h1>
-                        <p style="color: #8899aa; font-size: 16px; margin-top: 0;">Thank you for rating QVSE!</p>
-                    </div>
-
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(0, 242, 254, 0.15); border-radius: 10px; padding: 18px; margin-bottom: 24px; line-height: 1.6;">
-                        <p style="margin: 0; font-size: 15px;">As a <strong>trusted and valued QVSE member</strong>, you have unlocked an exclusive opportunity to earn even more with <strong>RXDT AI Trading</strong> — a powerful platform built for ambitious earners. Start your journey with <strong>as little as $100</strong> and grow your capital faster than ever.</p>
-                    </div>
-
-                    <!-- Growth Plans -->
-                    <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">📈 Choose Your Growth Plan</h2>
-                    
-                    <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #cd7f32;">
-                        <strong style="color: #fff;">🥉 Starter (From $100)</strong><br/>
-                        <span style="font-size: 13px; color: #8899aa;">1 daily signal. Double capital in less than 2 months (or ~30 days with 1 referral).</span>
-                    </div>
-                    
-                    <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #c0c0c0;">
-                        <strong style="color: #fff;">🥈 Growth (From $300)</strong><br/>
-                        <span style="font-size: 13px; color: #8899aa;">2 daily signals. Double capital in less than 30 days (even faster with 1 referral).</span>
-                    </div>
-
-                    <div style="margin-bottom: 24px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #ffd700;">
-                        <strong style="color: #fff;">🥇 Pro ($1,000+)</strong><br/>
-                        <span style="font-size: 13px; color: #8899aa;">3 daily signals. Double capital in just 3 weeks (less with 1 referral).</span>
-                    </div>
-
-                    <!-- Welcome Bonus -->
-                    <div style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 24px;">
-                        <p style="margin: 0; color: #ffd700; font-size: 15px; font-weight: bold;">🎁 Deposit Bonus Waiting For You!</p>
-                        <p style="margin: 4px 0 0 0; color: #e5b610; font-size: 13px;">Get up to <strong>$100 bonus</strong> on your first deposit, plus up to <strong>3 spins</strong> to win up to <strong>$50!</strong></p>
-                    </div>
-
-                    <!-- CTA Button -->
-                    <div style="text-align: center; margin-bottom: 28px;">
-                        <a href="https://www.rxdt.site/#/register?invite=RXN2ZO" target="_blank" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #ffd700, #e5b610); color: #1a1a1a; font-weight: bold; font-size: 16px; text-decoration: none; border-radius: 30px; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.25);">🚀 Create RXDT Account</a>
-                    </div>
-
-                    <!-- Social / Community Channels -->
-                    <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">👥 Join Our Community Channels</h2>
-                    
-                    <div style="margin-bottom: 12px;">
-                        <a href="https://chat.whatsapp.com/CypiIGGCDea7CBNpfxJ9dk?s=cl&p=a&ilr=1" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(37, 211, 102, 0.15); border: 1.5px solid rgba(37, 211, 102, 0.5); border-radius: 8px; color: #25d366; text-decoration: none; font-weight: bold; font-size: 14px;">💬 Join WhatsApp Group</a>
-                    </div>
-                    
-                    <div style="margin-bottom: 12px;">
-                        <a href="https://t.me/+iIx0d1qCg3syYzE0" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">✈️ Join Telegram Group</a>
-                    </div>
-
-                    <div style="margin-bottom: 24px;">
-                        <a href="https://t.me/RXDT888" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">👤 Message CEO @RXDT888 on Telegram</a>
-                    </div>
-
-                    <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px; font-size: 12px; color: #8899aa;">
-                        <p style="margin: 0;">QVSE &copy; 2026. All rights reserved.</p>
-                    </div>
-                </div>
-                """
-                
-                resend.Emails.send({
-                    "from": "QVSE Team <noreply@qvsespp.site>",
-                    "to": email,
-                    "subject": "Thank you for rating QVSE! 🎉 Claim your RXDT reward",
-                    "html": html_content
-                })
-            except Exception as mail_err:
-                print(f"Resend error: {mail_err}")
-
-        return jsonify({'success': True, 'message': 'Rating saved successfully'}), 200
+        return jsonify({'success': True, 'message': 'Rating saved successfully', 'email_sent': email_sent_status}), 200
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
+
+def send_reminder_email(email):
+    """Send transactional reminder email via Resend API."""
+    if not email or '@' not in email:
+        return False
+    try:
+        html_content = f"""
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #090d16; color: #ffffff; border-radius: 14px; border: 1px solid rgba(0, 242, 254, 0.25);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h1 style="color: #ffd700; font-size: 28px; margin-bottom: 8px;">Congratulations! 🎉</h1>
+                <p style="color: #8899aa; font-size: 16px; margin-top: 0;">Thank you for rating QVSE!</p>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(0, 242, 254, 0.15); border-radius: 10px; padding: 18px; margin-bottom: 24px; line-height: 1.6;">
+                <p style="margin: 0; font-size: 15px;">As a <strong>trusted and valued QVSE member</strong>, you have unlocked an exclusive opportunity to earn even more with <strong>RXDT AI Trading</strong> — a powerful platform built for ambitious earners. Start your journey with <strong>as little as $100</strong> and grow your capital faster than ever.</p>
+            </div>
+
+            <!-- Growth Plans -->
+            <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">📈 Choose Your Growth Plan</h2>
+            
+            <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #cd7f32;">
+                <strong style="color: #fff;">🥉 Starter (From $100)</strong><br/>
+                <span style="font-size: 13px; color: #8899aa;">1 daily signal. Double capital in less than 2 months (or ~30 days with 1 referral).</span>
+            </div>
+            
+            <div style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #c0c0c0;">
+                <strong style="color: #fff;">🥈 Growth (From $300)</strong><br/>
+                <span style="font-size: 13px; color: #8899aa;">2 daily signals. Double capital in less than 30 days (even faster with 1 referral).</span>
+            </div>
+
+            <div style="margin-bottom: 24px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 4px solid #ffd700;">
+                <strong style="color: #fff;">🥇 Pro ($1,000+)</strong><br/>
+                <span style="font-size: 13px; color: #8899aa;">3 daily signals. Double capital in just 3 weeks (less with 1 referral).</span>
+            </div>
+
+            <!-- Welcome Bonus -->
+            <div style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 24px;">
+                <p style="margin: 0; color: #ffd700; font-size: 15px; font-weight: bold;">🎁 Deposit Bonus Waiting For You!</p>
+                <p style="margin: 4px 0 0 0; color: #e5b610; font-size: 13px;">Get up to <strong>$100 bonus</strong> on your first deposit, plus up to <strong>3 spins</strong> to win up to <strong>$50!</strong></p>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin-bottom: 28px;">
+                <a href="https://www.rxdt.site/#/register?invite=RXN2ZO" target="_blank" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #ffd700, #e5b610); color: #1a1a1a; font-weight: bold; font-size: 16px; text-decoration: none; border-radius: 30px; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.25);">🚀 Create RXDT Account</a>
+            </div>
+
+            <!-- Social / Community Channels -->
+            <h2 style="font-size: 18px; color: #ffd700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 16px;">👥 Join Our Community Channels</h2>
+            
+            <div style="margin-bottom: 12px;">
+                <a href="https://chat.whatsapp.com/CypiIGGCDea7CBNpfxJ9dk?s=cl&p=a&ilr=1" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(37, 211, 102, 0.15); border: 1.5px solid rgba(37, 211, 102, 0.5); border-radius: 8px; color: #25d366; text-decoration: none; font-weight: bold; font-size: 14px;">💬 Join WhatsApp Group</a>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+                <a href="https://t.me/+iIx0d1qCg3syYzE0" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">✈️ Join Telegram Group</a>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <a href="https://t.me/RXDT888" target="_blank" style="display: block; text-align: center; padding: 12px; background: rgba(0, 136, 204, 0.15); border: 1.5px solid rgba(0, 136, 204, 0.5); border-radius: 8px; color: #4db8ff; text-decoration: none; font-weight: bold; font-size: 14px;">👤 Message CEO @RXDT888 on Telegram</a>
+            </div>
+
+            <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px; font-size: 12px; color: #8899aa;">
+                <p style="margin: 0;">QVSE &copy; 2026. All rights reserved.</p>
+                <p style="margin: 4px 0 0 0; font-size: 10px; color: #556677;">If you did not request this email, please ignore it or reply to unsubscribe.</p>
+            </div>
+        </div>
+        """
+        
+        # Anti-spam headers and clean Reply-To to prevent junk folder routing
+        resend.Emails.send({
+            "from": "QVSE Team <noreply@qvsespp.site>",
+            "to": email,
+            "subject": "Thank you for rating QVSE! 🎉 Claim your RXDT reward",
+            "html": html_content,
+            "headers": {
+                "X-Entity-Ref-ID": f"ref-{email.split('@')[0]}-{datetime.now().strftime('%s') if hasattr(datetime.now(), 'strftime') else '123'}",
+                "Reply-To": "support@qvsespp.site"
+            }
+        })
+        return True
+    except Exception as mail_err:
+        print(f"Resend error: {mail_err}")
+        return False
+
+
+@app.route('/api/admin/ratings', methods=['GET'])
+def get_admin_ratings():
+    """Retrieve all ratings submitted (for admin display)."""
+    try:
+        conn = get_db()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        # Create table/columns checks first just in case
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS ratings (
+                id SERIAL PRIMARY KEY,
+                rating INTEGER NOT NULL,
+                feedback TEXT,
+                email TEXT,
+                phone_number TEXT,
+                created_at TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email TEXT')
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS phone_number TEXT')
+        cursor.execute('ALTER TABLE ratings ADD COLUMN IF NOT EXISTS email_sent BOOLEAN DEFAULT FALSE')
+        conn.commit()
+        
+        cursor.execute('SELECT * FROM ratings ORDER BY created_at DESC')
+        rows = cursor.fetchall()
+        conn.close()
+
+        ratings = [dict(row) for row in rows]
+        return jsonify({'success': True, 'ratings': ratings}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/admin/send-email', methods=['POST'])
+def admin_send_email():
+    """Manually send or resend the reward email to a specific rating user."""
+    data = request.get_json()
+    rating_id = data.get('id')
+
+    if not rating_id:
+        return jsonify({'success': False, 'message': 'Rating ID is required'}), 400
+
+    try:
+        conn = get_db()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute('SELECT * FROM ratings WHERE id = %s', (rating_id,))
+        rating_row = cursor.fetchone()
+
+        if not rating_row:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Rating not found'}), 404
+
+        email = rating_row.get('email')
+        if not email or '@' not in email:
+            conn.close()
+            return jsonify({'success': False, 'message': 'User rating does not have a valid email address'}), 400
+
+        # Attempt to send email
+        success = send_reminder_email(email)
+
+        if success:
+            # Update database
+            cursor.execute('UPDATE ratings SET email_sent = TRUE WHERE id = %s', (rating_id,))
+            conn.commit()
+            conn.close()
+            return jsonify({'success': True, 'message': 'Email sent successfully'}), 200
+        else:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Resend delivery failed. Check your API configurations.'}), 500
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 
 
 
