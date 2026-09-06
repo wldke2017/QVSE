@@ -195,8 +195,6 @@ def login():
     if not password:
         return jsonify({'success': False, 'message': 'Password is required'}), 400
 
-    if not trading_password:
-        return jsonify({'success': False, 'message': 'Trading password is required'}), 400
 
     if login_type == 'email' and not email:
         return jsonify({'success': False, 'message': 'Email is required'}), 400
