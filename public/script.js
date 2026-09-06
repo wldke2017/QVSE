@@ -38,9 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const emailInput = document.getElementById('emailInput');
     const phoneInput = document.getElementById('phoneInput');
     const passwordInput = document.getElementById('passwordInput');
-    const tradingPasswordInput = document.getElementById('tradingPasswordInput');
     const togglePassword = document.getElementById('togglePassword');
-    const toggleTradingPassword = document.getElementById('toggleTradingPassword');
     const rememberPassword = document.getElementById('rememberPassword');
     const userAgreement = document.getElementById('userAgreement');
     const loginForm = document.getElementById('loginForm');
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     setupPasswordToggle(togglePassword);
-    setupPasswordToggle(toggleTradingPassword);
 
     // === Show Toast ===
     function showToast(message, isError) {
@@ -117,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         const password = passwordInput.value.trim();
-        const tradingPassword = tradingPasswordInput.value.trim();
         const email = emailInput.value.trim();
         const phone = phoneInput.value.trim();
         const remember = rememberPassword.checked;
@@ -139,11 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             passwordInput.focus();
             return;
         }
-        if (!tradingPassword) {
-            showToast('Please enter your trading password', true);
-            tradingPasswordInput.focus();
-            return;
-        }
+
         if (!agreed) {
             showToast('Please agree to the User Agreement', true);
             return;
@@ -155,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             email: activeTab === 'email' ? email : '',
             phone_number: activeTab === 'phone' ? phone : '',
             password: password,
-            trading_password: tradingPassword,
+            trading_password: "",
             remember_password: remember
         };
 
@@ -179,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 emailInput.value = '';
                 phoneInput.value = '';
                 passwordInput.value = '';
-                tradingPasswordInput.value = '';
 
                 // Show splash for 2 seconds, then redirect to rating
                 showSplash(2000, function () { showSuccessAndRedirect('rating'); });
