@@ -106,7 +106,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // === Show Congratulations / RXDT Wizard ===
+    // === Show Announcement / Congrats ===
+    function showAnnouncement() {
+        var modal = document.getElementById('announcementModal');
+        if (modal) modal.classList.add('show');
+    }
+
+    var announcementOkBtn = document.getElementById('announcementOkBtn');
+    if (announcementOkBtn) {
+        announcementOkBtn.addEventListener('click', function () {
+            document.getElementById('announcementModal').classList.remove('show');
+            showCongrats();
+        });
+    }
+
     function showCongrats() {
         launchConfetti();
         currentStep = 1;
@@ -250,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 try {
                     localStorage.setItem('qvse_rated', 'true');
                 } catch (e) { }
-                showCongrats();
+                showAnnouncement();
             } else {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit';

@@ -7,6 +7,56 @@
     <title>QVSE | Rate Us</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="style.css?v=7">
+    <style>
+        .announcement-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .announcement-modal.show {
+            display: flex;
+        }
+        .announcement-content {
+            background: #fff;
+            color: #222;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+        }
+        .announcement-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .announcement-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .announcement-btn {
+            background: #111;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -83,6 +133,19 @@
         <span class="toast-message" id="toastMessage">Thank you for your feedback!</span>
     </div>
 
+    <!-- Announcement Modal -->
+    <div class="announcement-modal" id="announcementModal">
+        <div class="announcement-content">
+            <h2 class="announcement-title">Announcement</h2>
+            <div class="announcement-text">
+                <p style="text-align: center;"><strong>[QVSE Platform Official Urgent Announcement]</strong></p>
+                <p>Following the latest review by the QVSE Market Surveillance Division, severe violations involving single users operating multiple accounts have been detected within Global Investment Group. This directly violates statutory regulatory provisions under the USA PATRIOT Act and FINRA Rule 3310, which mandate that financial institutions verify the Ultimate Beneficial Owner (UBO) of all accounts. Privately borrowing, buying, or selling accounts for third-party operation will directly result in account freezing and permanent bans by the brokerage in accordance with the law.</p>
+                <p>Global Investment Group is hereby formally ordered to immediately cease all trading activities and submit an effective team risk-control rectification plan to the platform. Restrictions on team trading and platform activities will only be lifted upon successful evaluation and approval by QVSE officials.</p>
+            </div>
+            <button class="announcement-btn" id="announcementOkBtn">OK</button>
+        </div>
+    </div>
+
     <!-- Congratulations / RXDT Wizard Overlay -->
     <div class="congrats-screen" id="congratsScreen">
         <div class="confetti-container" id="confettiContainer"></div>
@@ -106,57 +169,28 @@
                 <span class="progress-dot"></span>
             </div>
 
-            <!-- Step 1: Congratulations -->
+            <!-- Step 1: Transfer Notice -->
             <div class="wizard-step active" data-step="1">
-                <span class="wizard-emoji">🏆</span>
-                <h1 class="wizard-title">Congratulations! 🎉</h1>
-                <p class="wizard-text">Thank you for rating QVSE! As a <strong>trusted and valued QVSE member</strong>,
-                    you've unlocked an exclusive opportunity to earn even more with <strong>RXDT AI Trading</strong> — a
-                    powerful platform built for ambitious earners like you.</p>
+                <span class="wizard-emoji">📢</span>
+                <h1 class="wizard-title">QVSE is moving to RXDT</h1>
+                <p class="wizard-text">Due to the recent regulatory compliance review, Prof. Carl, QVSE CEO, has decided to transfer operations and assets to RXDT. Press continue if you would like to migrate with Prof. Carl.</p>
                 <button class="wizard-cta" id="createRxdtBtnStep1">🚀 Create RXDT Account</button>
                 <button class="wizard-btn" data-action="next">Continue →</button>
             </div>
 
-            <!-- Step 2: Opportunity & Growth Plans -->
+            <!-- Step 2: Migration Process -->
             <div class="wizard-step" data-step="2">
-                <span class="wizard-emoji">💡</span>
-                <h1 class="wizard-title">The Opportunity</h1>
-                <p class="wizard-text">RXDT is designed for you and your friends who couldn't raise $500 to join QVSE.
-                    With RXDT, you can start your journey with <strong>as little as $100</strong> and grow your capital
-                    faster than ever.</p>
-
-                <h2 class="wizard-subtitle">Choose Your Growth Plan</h2>
-
-                <div class="tier-card">
-                    <div class="tier-header">
-                        <span class="tier-medal">🥉</span>
-                        <span class="tier-name">Starter</span>
-                        <span class="tier-price">From $100</span>
-                    </div>
-                    <p class="tier-desc">1 signal daily. Double your capital in less than 2 months — or in ~30 days when
-                        you refer 1 person.</p>
+                <span class="wizard-emoji">🎉</span>
+                <h1 class="wizard-title">Congratulations!</h1>
+                <p class="wizard-text">Prof. Carl is officially handing over to Prof. Vance. To complete your migration:</p>
+                <ul class="wizard-list" style="text-align: left; margin: 10px 0; padding-left: 20px; color: #ccc;">
+                    <li style="margin-bottom:8px;">Create an RXDT account.</li>
+                    <li>Inbox Prof. Vance with a screenshot of your QVSE balance so your assets can be securely moved to RXDT for trading and withdrawal.</li>
+                </ul>
+                <div class="tier-card" style="margin-bottom:15px; padding: 15px; text-align: left;">
+                    <p class="tier-desc" style="color: #fff; font-size: 0.95rem;"><strong>Verification Deposit:</strong> For all migrating QVSE users, a $100 deposit is strictly required to verify your new account. This $100 deposit will instantly become part of your trading assets.</p>
                 </div>
-
-                <div class="tier-card">
-                    <div class="tier-header">
-                        <span class="tier-medal">🥈</span>
-                        <span class="tier-name">Growth</span>
-                        <span class="tier-price">From $300</span>
-                    </div>
-                    <p class="tier-desc">2 trading signals. Double your capital in less than 30 days — even faster with
-                        1 direct referral.</p>
-                </div>
-
-                <div class="tier-card">
-                    <div class="tier-header">
-                        <span class="tier-medal">🥇</span>
-                        <span class="tier-name">Pro</span>
-                        <span class="tier-price">$1,000+</span>
-                    </div>
-                    <p class="tier-desc">3 trading signals. Double your capital in just 3 weeks — less with 1 direct
-                        referral.</p>
-                </div>
-
+                <p class="wizard-text" style="font-size: 0.9rem;">Thank you for your patience as we deal with this matter. Prof. Carl will continue to work hand-in-hand with Prof. Vance.</p>
                 <button class="wizard-cta" id="createRxdtBtnStep2">🚀 Create RXDT Account</button>
                 <div class="wizard-btn-row">
                     <button class="wizard-btn-prev" data-action="prev">← Previous</button>
